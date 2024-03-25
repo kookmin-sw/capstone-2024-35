@@ -13,3 +13,6 @@ db생성파일 만들기 -민재
 C:\capstone\kmu35\src>npm start 서버 가동 시 경로 주의
 
 2024-03-25 변경 사항마다 서버 재실행을 자동으로 해주는 nodemon 툴 도입 서버 첫 가동은 똑같이 npm start 이후 수정사항은 저장만 하면 자동 업데이트 된다.
+
+2024-03-26 최상단 파일명의 이름이 src였는데 이는 mime파일 오류를 일으킨다. app으로 변경했으므로 서버가동도 
+C:\capstone\kmu35\app>npm start
