@@ -11,3 +11,5 @@ db생성파일 만들기 -민재
 
 껐다가 키면 kmu35 경로로 떠서 cd src로 src 파일 열고 서버가동해야함
 C:\capstone\kmu35\src>npm start 서버 가동 시 경로 주의
+
+2024-03-25 변경 사항마다 서버 재실행을 자동으로 해주는 nodemon 툴 도입
