@@ -1,3 +1,76 @@
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">채용문자 발송</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="card-group pb-5">
+                    <!-- 카드 -->
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title"><%= worksite.name %></h5>
+                      </div>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><%= worksite.address %></li>
+                        <li class="list-group-item">가까운 역 : 인덕원역</li>
+                        <li class="list-group-item">날짜 : <%= moment(worksite.date).format("MMMM Do (dd) a hh:mm") %></li>
+                        <li class="list-group-item">근무시간 : <%= moment(worksite.end).diff(worksite.date, 'hours') %>시간</li>
+                        <li class="list-group-item">일당 : <%= worksite.salary %>원</li>
+                        <li class="list-group-item"><%= worksite.worksitenote %></li>
+                      </ul>
+                    </div>
+                    <div class="card">
+                      <div class="card-body mb-4">
+                        <h5 class="card-title">문자 내용</h5>
+                        <textarea class="form-control h-100" aria-label="With textarea" ><%= moment(worksite.date).format("MMMM Do (dd) a hh:mm") %>&#10;<%= moment(worksite.end).diff(worksite.date, 'hours') %>시간 근무&#10;<%= worksite.address %>&#10;일당 <%= worksite.salary %>원&#10;<%= worksite.name %>&#10;<%= worksite.worksitenote %></textarea>
+                      </div>
+                    </div>
+                  </div>
+                <h5 class="h5">필요인원수 : <%= worksite.nopr %></h5>
+                <!-- 리스트 -->
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                          <th scope="col"></th>
+                          <th scope="col">이름</th>
+                          <th scope="col">나이</th>
+                          <th scope="col">성별</th>
+                          <th scope="col">전화번호</th>
+                          <th scope="col">거주지</th>
+                        </tr>
+                      </thead>
+
+
+                      <tbody>
+
+                        <% worksite.hired.forEach(employee => { %>
+                            <tr>
+                                <th scope="row"><input type="checkbox" class="form-check-input" id="check1"></th>
+                                <td><%= employee.name %></td>
+                                <td><%= calcAge(employee.RRN) %></td>
+                                <td><%= employee.sex %></td>
+                                <td><%= employee.phonenumber %></td>
+                                <td><%= employee.local %></td>
+                            </tr>
+                        <% }) %>
+
+                      </tbody>
+
+                </table>  
+
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          <button type="button" class="btn btn-primary">문자 보내기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <% worksite.hired.forEach(employee => { %>
 
     <div class="modal fade" id="modal<%= employee._id %>" tabindex="-1" role="dialog" id="deleteModal">
@@ -110,6 +183,7 @@
 <div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pb-2 mb-3 border-bottom">
     <h3 class="h3">인원수 :  <%= worksite.hired.length %> / <%= worksite.nopr %></h3>
     <div>
+        <button id="messageButton" type="button" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#messageModal">문자 보내기</button>
         <button onclick="location.href='/worksite/<%= worksite._id %>/edit'" type="button" class="btn btn-outline-info mt-2">수정</button>
         <button onclick="location.href='/worksite/<%= worksite._id %>/hire'" type="button" class="btn btn-outline-secondary mt-2">
             인원 추가하기
@@ -174,3 +248,12 @@
     </table>
 
 </div>
+
+<!-- <script>
+    const messageModal = document.getElementById('messageModal')
+    const messageButton = document.getElementById('messageButton')
+
+    messageButton.addEventListener('shown.bs.modal', () => {
+    messageModal.focus()
+})
+</script> -->

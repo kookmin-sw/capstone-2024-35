@@ -27,20 +27,23 @@ exports.worksite = async (req, res) => {
   let page = req.query.page || 1;
 
 //페이지에 보여줄 작업자 수
-  try {
-    const sortField = req.query.sortField || 'name';
-    const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+  // try {
+  //   const sortField = req.query.sortField || 'name';
+  //   const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
 
-    const worksites = await Worksite.aggregate([ { $sort: { [sortField]: sortOrder } } ])
-      .skip(perPage * page - perPage)
-      .limit(perPage)
-      .exec();
-    const count = await Worksite.countDocuments({});
-    // console.log(worksites)
-    res.render('worksite/worksite', { locals, messages, worksites, pages: Math.ceil(count / perPage), current: page, moment: moment, sortField, sortOrder} );
-  } catch (error) {
-    console.log(error);
-  }
+  //   const worksites = await Worksite.aggregate([ { $sort: { [sortField]: sortOrder } } ])
+  //     .skip(perPage * page - perPage)
+  //     .limit(perPage)
+  //     .exec();
+  //   const count = await Worksite.countDocuments({});
+  //   // console.log(worksites)
+  //   res.render('worksite/worksite', { locals, messages, worksites, pages: Math.ceil(count / perPage), current: page, moment: moment, sortField, sortOrder} );
+  // } catch (error) {
+  //   console.log(error);
+  // }
+
+    const worksites = await Worksite.find({user: req.user._id})
+    res.render('worksite/worksite', { locals, messages, worksites, moment })
 
 }
 
@@ -179,4 +182,18 @@ exports.deleteMatchedEmployee = async (req, res) => {
   // await req.flash('info', `${employee.name} 근무자를 삭제했습니다.`)
   await Career.findOneAndDelete({employee: eid, worksite: id})
   res.redirect(`/worksite/${id}`)
+}
+
+exports.showWorksitePayment = async (req, res) => {
+  console.log('/worksitePayment')
+const { id } = req.params;
+const worksite = await Worksite.findById(id).populate('hired')
+// console.log(worksite)
+res.render('worksite/worksitePayments', { worksite, moment, calcAge })
+
+exports.searchWorksite = async (req, res) => {
+  console.log('/searchWorksite')
+  console.log(req.body)
+  res.send("searchWorksite")
+
 }

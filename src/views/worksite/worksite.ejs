@@ -34,9 +34,9 @@
     <!-- <div class="container mb-3"> -->
         <div class="d-flex justify-content-between">
             <div>
-                <form role="search" method="POST" action="/worksite/search" id="searchWorksite"> 
+                <form role="search" method="POST" action="/worksite/search/" id="searchWorksite"> 
                     <div class="input-group">
-                        <input class="form-control" type="text" name="search" id="search" placeholder="검색">
+                        <input class="form-control" type="text" name="key" id="key" placeholder="검색">
                         <button class="btn btn-outline-secondary" type="submit" form="searchWorksite">검색</button>
                     </div>
                 </form>
@@ -60,88 +60,54 @@
     </div>
 <% }) %>
 
-<div class="table-responsive">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col" class="sortable" onclick="sortTable('name', 'string')">현장명</th>
-                <th scope="col" class="sortable" onclick="sortTable('address', 'string')">주소</th>
-                <th scope="col" class="sortable" onclick="sortTable('local', 'string')">소재지</th>
-                <th scope="col" class="sortable" onclick="sortTable('salary', 'number')">급여</th>
-                <th scope="col" class="sortable" onclick="sortTable('worktype', 'string')">업무</th>
-                <th scope="col" class="sortable" onclick="sortTable('date', 'date')">날짜</th>
-                <th scope="col" class="sortable" onclick="sortTable('hour', 'number')">근무시간</th>
-                <th scope="col" class="sortable" onclick="sortTable('norp', 'number')">필요인원</th>
-                <!-- <th scope="col" class="sortable" onclick="sortTable('update', 'date')">작성일(수정일)</th> -->
-                <th scope="col" class="text-end">Action</th>
-            </tr>
-        </thead>
+<div class="container-fluid" style="max-height:70%;">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="sortable" onclick="sortTable('name', 'string')">현장명</th>
+                    <th scope="col" class="sortable" onclick="sortTable('address', 'string')">주소</th>
+                    <th scope="col" class="sortable" onclick="sortTable('local', 'string')">소재지</th>
+                    <th scope="col" class="sortable" onclick="sortTable('salary', 'number')">급여</th>
+                    <th scope="col" class="sortable" onclick="sortTable('worktype', 'string')">업무</th>
+                    <th scope="col" class="sortable" onclick="sortTable('date', 'date')">날짜</th>
+                    <th scope="col" class="sortable" onclick="sortTable('hour', 'number')">근무시간</th>
+                    <th scope="col" class="sortable" onclick="sortTable('norp', 'number')">필요인원</th>
+                    <!-- <th scope="col" class="sortable" onclick="sortTable('update', 'date')">작성일(수정일)</th> -->
+                    <th scope="col" class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% worksites.forEach(worksite => { %>
+                <tr class="align-middle" onclick="location.href='/worksite/<%= worksite._id %>'">
+                    <td><%= worksite.name %></td>
+                    <td><%= worksite.address %></td>
+                    <td><%= worksite.local %></td>
+                    <td><%= worksite.salary %></td>
+                    <td><%= worksite.worktype %></td>
+                    <td><%= moment(worksite.date).format("YYYY년 MMMM Do a hh:mm") %></td>
+                    <td><%= moment(worksite.end).diff(worksite.date, 'hour') %>시간</td>
+                    <td><%= worksite.hired.length %> / <%= worksite.nopr %></td>
+                    <!-- <td><%= moment(worksite.updatedAt).format("YYYY년 MMMM Do a hh:mm") %></td> -->
+                    <td class="text-end">
 
-        <tbody>
-            <% worksites.forEach(worksite => { %>
-             <tr class="align-middle" onclick="location.href='/worksite/<%= worksite._id %>'">
-                <td><%= worksite.name %></td>
-                <td><%= worksite.address %></td>
-                <td><%= worksite.local %></td>
-                <td><%= worksite.salary %></td>
-                <td><%= worksite.worktype %></td>
-                <td><%= moment(worksite.date).format("YYYY년 MMMM Do a hh:mm") %></td>
-                <td><%= moment(worksite.end).diff(worksite.date, 'hour') %>시간</td>
-                <td><%= worksite.hired.length %> / <%= worksite.nopr %></td>
-                <!-- <td><%= moment(worksite.updatedAt).format("YYYY년 MMMM Do a hh:mm") %></td> -->
-                <td class="text-end">
-
-                    <div class="d-flex flex-row justify-content-end gap-2">
-                        <a href="/worksite/<%= worksite._id %>" type="button" class="btn btn-primary btn-small">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                        <a  type="button" class="btn btn-danger btn-small" data-bs-toggle="modal" data-bs-target="#modal<%= worksite._id %>">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                    </div>
-                </td>
-             </tr>
-            <% }) %>
-        </tbody>
-
-    </table>
-
+                        <div class="d-flex flex-row justify-content-end gap-2">
+                            <a href="/worksite/<%= worksite._id %>" type="button" class="btn btn-primary btn-small">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a  type="button" class="btn btn-danger btn-small" data-bs-toggle="modal" data-bs-target="#modal<%= worksite._id %>">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<% if (worksites.length > 0) { %>
-    <nav aria-label="Worksite Pagination">
-        <ul class="pagination justify-content-center mt-5">
 
-            <% if (current == 1) { %>
-                <li class="page-item"><a href="#" class="page-link">First</a></li>
-            <% } else { %>
-                <li class="page-item"><a href="/worksite/?page=1" class="page-link">First</a></li>
-            <% } %>
-
-            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
-            <% if(i !== 1)  { %>
-                <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-            <% } %>
-
-            <% for(; i <= (Number(current) + 4 ) && i <= pages; i++ ) { %>
-                <% if (i == current) { %>
-                    <li class="page-item disabled"><a href="#" class="page-link"><%= i %></a></li>
-                <% } else {%>
-                    <li class="page-item"><a href="/worksite/?page=<%= i %>" class="page-link"><%= i %></a></li>
-                <% } %>
-                <% if (i == Number(current) + 4 && i < pages) { %>
-                    <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-                <% } %>
-            <% } %>
-
-            <% if (current == pages) { %>
-                <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
-            <% } else { %>
-                <li class="page-item"><a href="/worksite/?page=<%= pages %>" class="page-link">Last</a></li>
-            <% } %>
-        </ul>
-    </nav>
-<% } %>
 
 <style>
     .sortable {
@@ -165,4 +131,17 @@
         searchParams.set('fieldType', fieldType);
         window.location.search = searchParams.toString();
     }
+
+    // 스크롤 위치를 localStorage에 저장
+    window.onbeforeunload = function() {
+            localStorage.setItem('scrollPosition', window.scrollY);
+        };
+
+    // 페이지 로딩 시 저장된 스크롤 위치로 이동
+    window.onload = function() {
+        if (localStorage.getItem('scrollPosition')) {
+            window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition')));
+            localStorage.removeItem('scrollPosition'); // 사용 후 데이터 삭제
+        }
+    };
 </script>

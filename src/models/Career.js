@@ -9,7 +9,8 @@ const careerSchema = new Schema({
     worksite: {
     	type: Schema.Types.ObjectId,
         ref: 'Worksite'
-    }
+    },
+
 });
 
 module.exports = mongoose.model('Career', careerSchema)

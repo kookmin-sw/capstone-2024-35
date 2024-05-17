@@ -1,0 +1,153 @@
+<% worksite.hired.forEach(employee => { %>
+
+    <div class="modal fade" id="modal<%= employee._id %>" tabindex="-1" role="dialog" id="deleteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">You are about to fire a employee.</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <b class="fw-bold"><%= employee.name %></b> 인원을 제외하시겠습니까?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+    
+                    <form action="/worksite/<%= worksite._id %>/delete/<%= employee._id %>?_method=DELETE" method="POST" class="position-relative">
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">네, 삭제하겠습니다</button>
+                    </form>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<% }); %>
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h3 class="h2">정산</h3>
+</div>   
+
+<div class="col py-3">
+
+    <div class="row">
+        <div class="col">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/worksite">업무목록</a></li>
+                    <li class="breadcrumb-item active"><%= worksite.name  %></li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col text-end fw-lighter">
+            <b>마지막 업데이트: </b><%= moment(worksite.updatedAt).format("YYYY년 MMMM Do (dd) a hh:mm") %> <b>(<%= moment(worksite.updatedAt).fromNow() %>)</b><br>
+            <b>UserId:</b> <%= worksite.user %>
+        </div>
+    </div>
+
+</div>
+<div class="container-fluid pb-3">
+    <div class="card-group">
+        <!-- 카드 -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><%= worksite.name %></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><%= worksite.address %></li>
+            <li class="list-group-item"><%= moment(worksite.date).format("MMMM Do (dd) a hh:mm") %> / <%= moment(worksite.end).diff(worksite.date, 'hours') %>시간 근무</li>
+            <li class="list-group-item">일당 <%= worksite.salary %>원</li>
+            <li class="list-group-item"><%= worksite.worksitenote %></li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">　　　　　　　　수익금 정산</h5>
+          </div>
+          <ul class="list-group list-group-flush"> 
+            <li class="list-group-item">수주업체 착수금 150000원</li>
+            <li class="list-group-item">노동자 임금 지급 130000원</li>
+            <li class="list-group-item">이윤 20000*(작업자 수)원</li>
+        </ul>
+
+            
+          </div>
+        </div>
+      </div>
+
+</div>
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h3 class="h3">인원수 :  <%= worksite.hired.length %> / <%= worksite.nopr %></h3>
+    <div>
+        <button onclick="location.href='/worksite/<%= worksite._id %>/edit'" type="button" class="btn btn-outline-info mt-2">수정</button>
+        <button onclick="location.href='/worksite/<%= worksite._id %>/hire'" type="button" class="btn btn-outline-secondary mt-2">
+            인원 추가하기
+        </button>
+    </div>
+</div>   
+
+<div class="table-responsive">
+    <table class="table table-striped table-md">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">이름</th>
+                <th scope="col">성별</th>
+                <th scope="col">전화번호</th>
+                <th scope="col">거주지</th>
+                <th scope="col">나이</th>
+                <!-- <th scope="col">경력유무</th> -->
+                <th scope="col">주민번호</th>
+                
+                <!-- <th scope="col" class="text-end">Action</th> -->
+            </tr>
+        </thead>
+
+        <tbody>
+            <% worksite.hired.forEach(employee => { %>
+             <tr class="align-middle">
+                <th scope="row"><input type="checkbox" class="form-check-input" id="check1"></th>
+                <td><%= employee.name %></td>
+                <td><%= employee.sex %></td>
+                <td><%= employee.phonenumber %></td>
+                <td><%= employee.local %></td>
+                <td><%= calcAge(employee.RRN) %></td>
+                <td><%= employee.RRN %></td>
+                
+                <!-- <td class="text-end">
+                    <form action="POST">
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal<%= employee._id %>">
+                            삭제하기
+                        </button>
+                    </form>
+                    <div class="d-flex flex-row justify-content-end gap-2"> -->
+
+                        <!-- <a href="/view/<%= employee._id %>" type="button" class="btn btn-primary btn-small">
+                            <i class="bi bi-eye"></i>
+                        </a> -->
+
+                        <!-- <a href="/edit/<%= employee._id %>" type="button" class="btn btn-warning btn-small">
+                            <i class="bi bi-pencil"></i>
+                        </a> -->
+
+                        <!-- <form action="/edit/<%= employee._id %>?_method=DELETE" method="POST" class="position-relative">
+                            <button type="submit" class="btn btn-danger btn-small">
+                                <i class="bi bi-person-x"></i>
+                            </button>
+                        </form> -->
+                            
+                    <!-- </div>
+                </td> -->
+             </tr>
+            <% }) %>
+        </tbody>
+
+    </table>
+
+</div>
