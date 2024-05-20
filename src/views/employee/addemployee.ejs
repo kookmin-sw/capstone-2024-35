@@ -1,0 +1,76 @@
+<div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h3 class="h2">작업자</h3>
+
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button class="btn btn-sm btn-outline-secondary">?</button>
+        </div>
+    </div>
+</div>    
+
+<div class="col py-3">
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/employee">작업자</a></li>
+                    <li class="breadcrumb-item active">새 작업자</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- <div class="col text-end fw-lighter">
+            <b>userName</b>
+        </div> -->
+    </div>
+</div>
+
+
+
+
+
+
+<form action="/addemployee" method="POST">
+
+    <div class="row form-group mb-4">
+
+        <div class="col">
+            <label for="employeename">이름</label>
+            <input type="text" class="form-control" id="name" name="name" value="" placeholder="Name"
+            required>
+        </div>
+
+        <div class="col">
+            <label for="sex">성별</label>
+            <input type="text" class="form-control" id="sex" name="sex" value="" placeholder="Sex"
+            required>
+        </div>
+    </div>
+<!-- 성별 -->
+    <div class="row form-group mb-4">
+
+        <div class="col">
+            <label for="local">거주지</label>
+            <input type="text" class="form-control" id="local" name="local" value="" placeholder="Local"
+            required>
+        </div>
+<!-- 주민번호 -->
+        <div class="col">
+            <label for="RRN">주민번호</label>
+            <input type="text" class="form-control" id="RRN" name="RRN" value="" placeholder="RRN"
+            req>
+        </div>
+    </div>
+<!-- 전화번호 -->
+    <div class="row form-group mb-4">
+
+        <div class="col">
+            <label for="phonenumber">전화번호</label>
+            <input type="text" class="form-control" id="phonenumber" name="phonenumber" value="" placeholder="Telephone"
+            required>
+        </div>
+    </div>
+
+    <div class="row form-group mb-4">
+        <button type="submit" class="btn btn-primary">작업자 추가하기</button>
+    </div>
+</form>

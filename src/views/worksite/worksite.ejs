@@ -1,0 +1,147 @@
+<% worksites.forEach(function(worksite) { %>
+
+<div class="modal fade" id="modal<%= worksite._id %>" tabindex="-1" role="dialog" id="deleteModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">You are about to remove a worksite record.</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <b class="fw-bold"><%= worksite.name %></b> 현장을 삭제하시겠습니까?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+
+                <form action="/worksite/<%= worksite._id %>/delete?_method=DELETE" method="POST" class="position-relative">
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">네, 삭제하겠습니다</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<% }); %>
+
+<div class="mb-3">
+    <div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3">
+        <h3 class="h2">등록된 현장 목록</h3>
+        
+    </div>    
+    <!-- <div class="container mb-3"> -->
+        <div class="d-flex justify-content-between">
+            <div>
+                <form role="search" method="POST" action="/worksite/search/" id="searchWorksite"> 
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="key" id="key" placeholder="검색">
+                        <button class="btn btn-outline-secondary" type="submit" form="searchWorksite">검색</button>
+                    </div>
+                </form>
+            </div>
+            <div class="btn-toolbar">
+                <div class="btn-group me-2 ">
+                    <button onclick="location.href='/worksite/add'" class="btn btn-outline-secondary" type="button">추가하기</button>
+                    <!-- <a href="/worksite/add" class="btn btn-sm btn-outline-secondary">추가하기</a> -->
+                </div>
+            </div>
+        </div>
+    <!-- </div> -->
+</div>
+
+
+
+<% messages.forEach(element => { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= element %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% }) %>
+
+<div class="container-fluid" style="max-height:70%;">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="sortable" onclick="sortTable('name', 'string')">현장명</th>
+                    <th scope="col" class="sortable" onclick="sortTable('address', 'string')">주소</th>
+                    <th scope="col" class="sortable" onclick="sortTable('local', 'string')">소재지</th>
+                    <th scope="col" class="sortable" onclick="sortTable('salary', 'number')">급여</th>
+                    <th scope="col" class="sortable" onclick="sortTable('worktype', 'string')">업무</th>
+                    <th scope="col" class="sortable" onclick="sortTable('date', 'date')">날짜</th>
+                    <th scope="col" class="sortable" onclick="sortTable('hour', 'number')">근무시간</th>
+                    <th scope="col" class="sortable" onclick="sortTable('norp', 'number')">필요인원</th>
+                    <!-- <th scope="col" class="sortable" onclick="sortTable('update', 'date')">작성일(수정일)</th> -->
+                    <th scope="col" class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% worksites.forEach(worksite => { %>
+                <tr class="align-middle" onclick="location.href='/worksite/<%= worksite._id %>'">
+                    <td><%= worksite.name %></td>
+                    <td><%= worksite.address %></td>
+                    <td><%= worksite.local %></td>
+                    <td><%= worksite.salary %></td>
+                    <td><%= worksite.worktype %></td>
+                    <td><%= moment(worksite.date).format("YYYY년 MMMM Do a hh:mm") %></td>
+                    <td><%= moment(worksite.end).diff(worksite.date, 'hour') %>시간</td>
+                    <td><%= worksite.hired.length %> / <%= worksite.nopr %></td>
+                    <!-- <td><%= moment(worksite.updatedAt).format("YYYY년 MMMM Do a hh:mm") %></td> -->
+                    <td class="text-end">
+
+                        <div class="d-flex flex-row justify-content-end gap-2">
+                            <a href="/worksite/<%= worksite._id %>" type="button" class="btn btn-primary btn-small">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a  type="button" class="btn btn-danger btn-small" data-bs-toggle="modal" data-bs-target="#modal<%= worksite._id %>">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<style>
+    .sortable {
+        cursor: pointer;
+        transition: background-color 0.3s ease; /* 부드러운 색상 전환 효과 */
+    }
+    
+    .sortable:hover {
+        background-color: #e2e6ea; /* 부트스트랩의 회색계열 중 진한 색 */
+    }
+    </style>
+    
+
+<script>
+    function sortTable(fieldName, fieldType) {
+        const currentUrl = new URL(window.location);
+        const searchParams = currentUrl.searchParams;
+        let sortOrder = searchParams.get('sortOrder') === 'asc' ? 'desc' : 'asc';
+        searchParams.set('sortField', fieldName);
+        searchParams.set('sortOrder', sortOrder);
+        searchParams.set('fieldType', fieldType);
+        window.location.search = searchParams.toString();
+    }
+
+    // 스크롤 위치를 localStorage에 저장
+    window.onbeforeunload = function() {
+            localStorage.setItem('scrollPosition', window.scrollY);
+        };
+
+    // 페이지 로딩 시 저장된 스크롤 위치로 이동
+    window.onload = function() {
+        if (localStorage.getItem('scrollPosition')) {
+            window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition')));
+            localStorage.removeItem('scrollPosition'); // 사용 후 데이터 삭제
+        }
+    };
+</script>

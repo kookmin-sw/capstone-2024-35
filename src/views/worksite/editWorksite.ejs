@@ -1,0 +1,108 @@
+<div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h3 class="h2"><%= worksite.name %></h3>
+
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button class="btn btn-sm btn-outline-secondary">?</button>
+        </div>
+    </div>
+</div>    
+
+<div class="col py-3">
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href='/worksite'>업무목록</a></li>
+                    <li class="breadcrumb-item"><a href='/worksite/<%= worksite._id %>'><%= worksite.name %></a></li>
+                    <li class="breadcrumb-item active">수정</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<form action="/worksite/<%= worksite._id %>/edit?_method=PUT" method="POST">
+
+    <div class="row form-group mb-4">
+
+        <div class="col">
+            <label for="name">현장명</label>
+            <input type="text" class="form-control" id="name" name="name" value="<%= worksite.name %>" placeholder="Name">
+        </div>
+
+        <div class="col">
+            <label for="address">상세주소</label>
+            <input type="text" class="form-control" id="address" name="address" value="<%= worksite.address %>" placeholder="address"
+            required>
+        </div>
+    </div>
+<!-- 성별 -->
+    <div class="row form-group mb-4">
+
+        <div class="col">
+            <label for="local">소재지</label>
+            <input type="text" class="form-control" id="local" name="local" value="<%= worksite.local %>" placeholder="Local"
+            required>
+        </div>
+<!-- 주민번호 -->
+        <div class="col">
+            <label for="salary">급여</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="salary" name="salary" value="<%= worksite.salary %>" placeholder="salary"
+                required>
+                <span class="input-group-text">₩</span>
+            </div>
+        </div>
+    </div>
+<!-- 전화번호 -->
+    <div class="row form-group mb-4">
+
+        <div class="col">
+            <label for="worktype">업종</label>
+            <input type="text" class="form-control" id="worktype" name="worktype" value="<%= worksite.worktype %>" placeholder="worktype"
+            required>
+        </div>
+
+        <div class="col">
+            <label for="nopr">필요인원</label>
+            <input type="text" class="form-control" id="nopr" name="nopr" value="<%= worksite.nopr %>" placeholder="nopr"
+            required>
+        </div>
+
+    </div>
+
+    <div class="row form-group mb-4">
+        <div class="col">
+            <label for="date">날짜</label>
+            <div class="input-group date" id="datetimepicker1" date-target-input="nearest">
+                <input type="datetime-local" class="form-control datetimepicker-input" data-target="#datetimepicker1" id="date" name="date" value="<%= moment(worksite.date).format('YYYY-MM-DDTHH:mm')%>" >
+                
+                <div class="input-group-addon" data-toggle="datetimepicker" data-target="#datetimepicker1">
+                    <div class="glyphicon glyphicon-calendar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <label for="hour">작업시간</label>
+            <div class="input-group">
+            <input type="text" class="form-control" id="hour" name="hour" value="<%= moment(worksite.end).diff(worksite.date, 'hour') %>" placeholder="hour"
+            required>
+            <span class="input-group-text">시간</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row form-group mb-4">
+        <div class="col">
+            <label for="note">현장설명</label>
+            <input type="text" class="form-control" id="note" name="note" value="<%= worksite.worksitenote %>" placeholder="note"
+            required>
+        </div>
+    </div>
+
+    <div class="row form-group mb-4">
+        <button type="submit" class="btn btn-primary">작업현장 수정하기</button>
+    </div>
+</form>

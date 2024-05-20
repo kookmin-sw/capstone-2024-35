@@ -1,0 +1,31 @@
+const Worksite = require('../models/Worksite')
+const Employee = require('../models/Employee');
+const Career = require('../models/Career')
+const mongoose = require('mongoose');
+const moment = require('moment');
+const calcAge = require('../public/js/calcAge');
+
+require("moment-timezone")
+require("moment/locale/ko");
+moment.locale('ko')
+
+
+/**
+ * GET /
+ * wage
+*/
+exports.wage = async (req, res) => {
+  const locals = {
+    title: "About - NodeJs Notes",
+    description: "Free NodeJS Notes App.",
+  }
+  res.render('wage', locals);
+}
+
+exports.showWorksitePayment = async (req, res) => {
+    console.log('/worksitePayment')
+  const { id } = req.params;
+  const worksite = await Worksite.findById(id).populate('hired')
+  // console.log(worksite)
+  res.render('worksite/worksiteDetail', { worksite, moment, calcAge })
+}

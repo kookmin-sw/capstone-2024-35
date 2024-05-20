@@ -1,0 +1,82 @@
+<div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h3 class="h2"><%= employee.name  %></h3>
+
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">공유하기</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">내보내기</button>
+        </div>
+    </div>
+</div> 
+
+<div class="col py-3">
+
+    <div class="row">
+        <div class="col">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/employee">작업자</a></li>
+                    <li class="breadcrumb-item active"><%= employee.name  %></li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col text-end fw-lighter">
+            <b>마지막 업데이트 <%= new Date(employee.updatedAt).toUTCString() %></b>
+            <b>UserId:</b> <%= employee._id %>
+        </div>
+    </div>
+
+</div>
+
+<ul class="list-group">
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col" style="max-width: 140px"> <b>이름</b></div>
+            <div class="col"><%= employee.name %></div>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col" style="max-width: 140px"> <b>성별</b></div>
+            <div class="col"><%= employee.sex %></div>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col" style="max-width: 140px"> <b>사는지역</b></div>
+            <div class="col"><%= employee.local %></div>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col" style="max-width: 140px"> <b>주민번호</b></div>
+            <div class="col"><%= employee.RRN %></div>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col" style="max-width: 140px"> <b>휴대폰번호</b></div>
+            <div class="col"><%= employee.phonenumber %></div>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col" style="max-width: 140px"> <b>정보 생성일</b></div>
+            <div class="col"><%= employee.createdAt%></div>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col" style="max-width: 140px"> <b>정보 업데이트</b></div>
+            <div class="col"><%= employee.updatedAt%></div>
+        </div>
+    </li>
+</ul>
