@@ -127,7 +127,6 @@ tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
 npm install
 ## 추후 변경해야 할 점
 
-2024-04-04 추가 패키지 dotenv cors mongoose jsonwebtoken express-async-errors
 
 ## env 파일 예시
 파일 명 .env <br>
