@@ -125,16 +125,19 @@ tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
 ## 패키지 설치
 프로젝트에 필요한 패키지들을 설치합니다.
 npm install
+
 ## 추후 변경해야 할 점
 
 2024-04-04 추가 패키지 dotenv cors mongoose jsonwebtoken express-async-errors
+
 
 ## env 파일 예시
 파일 명 .env <br>
 MONGO_URI=our mongodb uri (given) <br> JWT_SECRET=our own text
 
-## 7. 캡스톤 중간발료 자료 
-https://drive.google.com/file/d/1LUjsdSaV7NIY5Zc5wkjRuRAeCKtxECTb/view?usp=drivesdk
+
+## 7. 캡스톤 최종발료 자료 
+https://docs.google.com/presentation/d/1iJvgJuWEdSxu9rag-1UDNdaGIv3s8Zqh/edit?usp=sharing&ouid=116159848948864038515&rtpof=true&sd=true
 
 ## 8. 캡스톤 포스터 ai 파일
 https://drive.google.com/file/d/1brOpfNPwoGO98SUKq56ew-wEG-nqXEWk/view?usp=drive_link
