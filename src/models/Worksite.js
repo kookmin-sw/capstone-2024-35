@@ -48,7 +48,63 @@ const WorksiteSchema = new Schema({
     type: Number,
     required: true,
   },
-  //채용 확정된 인원
+  // 채용 희망 인원 (문자 발송 전)
+  wanted: [
+    {
+      type: Schema.ObjectId,
+      ref: 'Employee',
+    }
+  ],
+  // 채용 희망 인원 (문자 발송 후, 수신 전)
+  sent: [
+    {
+      type: Schema.ObjectId,
+      ref: 'Employee',
+    }
+  ],
+  sendMessage: [
+    {
+      phone: {
+        type: String,
+        required: true,
+      },
+      message: {
+        type: String,
+        required: true,
+      },
+      date: {
+        type: Date,
+        required: true,
+        default: Date.now()
+      }
+    }
+  ],
+  // 받은 문자들을 저장
+  recieved: [
+    {
+      phone: {
+        type: String,
+        required: true,
+      },
+      message: {
+        type: String,
+        required: true,
+      },
+      date: {
+        type: Date,
+        required: true,
+        default: Date.now()
+      }
+    }
+  ],
+  // 채용 거절한 인원 (문자 수신 후)
+  denied: [
+    {
+      type: Schema.ObjectId,
+      ref: 'Employee',
+    }
+  ],
+  // 채용 확정(수락)한 인원 (문자 수신 후))
   hired: [
     {
       type: Schema.ObjectId,

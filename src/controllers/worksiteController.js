@@ -3,7 +3,7 @@ const Employee = require('../models/Employee');
 const Career = require('../models/Career')
 const mongoose = require('mongoose');
 const moment = require('moment');
-const calcAge = require('../public/js/calcAge');
+const calcAge = require('../utils/calcAge');
 
 require("moment-timezone")
 require("moment/locale/ko");
@@ -186,14 +186,25 @@ exports.deleteMatchedEmployee = async (req, res) => {
 
 exports.showWorksitePayment = async (req, res) => {
   console.log('/worksitePayment')
-const { id } = req.params;
-const worksite = await Worksite.findById(id).populate('hired')
-// console.log(worksite)
-res.render('worksite/worksitePayments', { worksite, moment, calcAge })
+  const { id } = req.params;
+  const worksite = await Worksite.findById(id).populate('hired')
+  // console.log(worksite)
+  res.render('worksite/worksitePayments', { worksite, moment, calcAge })
+}
 
 exports.searchWorksite = async (req, res) => {
   console.log('/searchWorksite')
   console.log(req.body)
-  res.send("searchWorksite")
+  const key = req.body.key;
+  const wholeWorksites = await Worksite.find({});
+  const worksites = wholeWorksites.filter(worksite => 
+    worksite.name.includes(key) ||
+    worksite.address.includes(key) ||
+    worksite.local.includes(key) ||
+    worksite.worktype.includes(key)
+  );
+  // console.log(worksites)
+  const messages = await req.flash('info');
+  res.render('worksite/worksite', { messages, worksites, moment })
 
 }

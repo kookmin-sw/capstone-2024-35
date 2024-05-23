@@ -1,7 +1,9 @@
 const Employee = require('../models/Employee')
 const mongoose = require('mongoose');
 const Career = require('../models/Career')
-const calculateAge = require('../public/js/calcAge')
+const calculateAge = require('../utils/calcAge');
+const { worksite } = require('./worksiteController');
+const moment = require('moment')
 
 
 /**
@@ -95,7 +97,12 @@ exports.postEmployee = async (req, res) => {
 
     try{
       const employee = await Employee.findOne({ _id: req.params.id })
-      
+      const careers = await Career.find({employee: employee._id}).populate('worksite')
+      // console.log(careers)
+      careers.forEach(career => {
+        // console.log("career detail : ", career.worksite)
+      })
+    
       const locals = {
         title: "View Employee Data",
         description: "Free NodeJs User Management System",
@@ -106,6 +113,8 @@ exports.postEmployee = async (req, res) => {
         locals,
         employee,
         calculateAge,
+        careers,
+        moment
       })
     } catch(error) {
       console.log(error);
@@ -223,3 +232,15 @@ exports.postEmployee = async (req, res) => {
             console.log(error);
           }
         };
+
+exports.putReview = async (req, res) => {
+  console.log('/put review')
+
+  const { eid, cid } = req.params;
+
+  await Career.findByIdAndUpdate(cid, {review: req.body.review})
+
+  const updated = await Career.findById(cid)
+  console.log(updated.review)
+  res.redirect(`/view/${eid}`)
+}

@@ -66,21 +66,13 @@
         </div>
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">　　　　　　　　수익금 정산</h5>
-          </div>
-          <ul class="list-group list-group-flush"> 
-            <li class="list-group-item">수주업체 착수금 150000원</li>
-            <li class="list-group-item">노동자 임금 지급 130000원</li>
-            <li class="list-group-item">이윤 20000*(작업자 수)원</li>
-        </ul>
-
-            
+            <h4 class="card-title">예산 : 720000원</h4><br>
+            <h4 class="card-title">임금 : 160000원</h4><br>
+            <h4 class="card-title">이윤 : 80000원</h4>
           </div>
         </div>
       </div>
-
 </div>
-
 
 <div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pb-2 mb-3 border-bottom">
     <h3 class="h3">인원수 :  <%= worksite.hired.length %> / <%= worksite.nopr %></h3>
@@ -104,6 +96,7 @@
                 <th scope="col">나이</th>
                 <!-- <th scope="col">경력유무</th> -->
                 <th scope="col">주민번호</th>
+                <th scope="col">임금지급</th>
                 
                 <!-- <th scope="col" class="text-end">Action</th> -->
             </tr>
@@ -119,6 +112,7 @@
                 <td><%= employee.local %></td>
                 <td><%= calcAge(employee.RRN) %></td>
                 <td><%= employee.RRN %></td>
+                <td class="text-primary">지급완료</td>
                 
                 <!-- <td class="text-end">
                     <form action="POST">
