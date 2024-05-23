@@ -290,7 +290,6 @@ def calculate_score_for_person(person_info, model_roberta, model_electra, tokeni
 
     # 현장과 지하철역의 거리 계산 (km 단위로 환산)
     distance_to_station = calculate_distance(work_location, subway_station)
-    print(distance_to_station)
 
     # 출석률 계산
     actual_work_days = person_info['actual_work_days']
@@ -330,11 +329,11 @@ def calculate_score_for_person(person_info, model_roberta, model_electra, tokeni
     else:
         distance_score = 0
 
-    print(distance_score)
+
     # 텍스트 예측을 위한 코드 추가
     texts_to_predict = [person_info['review']]  # 텍스트를 리스트로 변환
     final_labels = predict_with_ensemble_modified(texts_to_predict, model_roberta, model_electra, tokenizer_roberta, tokenizer_electra, device)
-    print(final_labels)
+
     for label in final_labels:
       sentiment_score = label_to_value(label)
 
