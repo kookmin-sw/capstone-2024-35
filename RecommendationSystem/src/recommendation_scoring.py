@@ -1,17 +1,17 @@
+#rec_sys
 from geopy.distance import geodesic
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import numpy as np
-import numpy as np
 import pandas as pd
-import torch
-from sklearn.metrics import accuracy_score
-from model import load_model_and_tokenizer, predict_entities
-from data_processing import find_career_status, find_phone_number, extract_and_combine_entities
-from datasets import load_dataset
-from config.db import connect_db, get_collection
-from employee import Employee, EmployeeRepository
 
+
+#db
+from config.db import connect_db, get_collection
+from employee import Employee
+from career import Career
+from worksite import Worksite
+from pymongo import MongoClient
 
 # MongoDB 데이터베이스 연결
 db = connect_db()
@@ -25,15 +25,13 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 tokenizer_roberta = AutoTokenizer.from_pretrained("klue/roberta-large")
 tokenizer_electra = AutoTokenizer.from_pretrained("monologg/koelectra-base-v3-discriminator")
 
-# 로드할 RoBERTa 모델 경로
-roberta_model_path = "/content/drive/MyDrive/robust_model/roberta_model"
-# 로드할 Electra 모델 경로
-electra_model_path = "/content/drive/MyDrive/robust_model/electra_model"
 
 # 저장된 모델 로드
-model_roberta = AutoModelForSequenceClassification.from_pretrained(roberta_model_path)
-model_electra = AutoModelForSequenceClassification.from_pretrained(electra_model_path)
+model_roberta = AutoModelForSequenceClassification.from_pretrained("Chamsol/klue-roberta-sentiment-classification")
+model_electra = AutoModelForSequenceClassification.from_pretrained("Chamsol/koelctra-sentiment-classification")
 
+
+#score
 def calculate_distance(point1, point2):
     # 두 지점 사이의 거리를 계산하는 함수
     distance_to_station = geodesic(point1, point2).kilometers
@@ -53,6 +51,7 @@ def label_to_value(label):
     else:
         return 0
 
+#predict
 def logits_to_probs(logits):
   return torch.nn.functional.softmax(logits, dim=1)
 
@@ -90,6 +89,7 @@ def predict_with_ensemble_modified(texts, roberta_model, koelectra_model, tokeni
 
     return final_labels
 
+#stringtolocal
 def get_coordinates_worksites(address):
     # 주소에 따른 좌표 정보를 저장하는 딕셔너리
     coordinates_worksites = {
