@@ -2,6 +2,21 @@ from geopy.distance import geodesic
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import numpy as np
+import numpy as np
+import pandas as pd
+import torch
+from sklearn.metrics import accuracy_score
+from model import load_model_and_tokenizer, predict_entities
+from data_processing import find_career_status, find_phone_number, extract_and_combine_entities
+from datasets import load_dataset
+from config.db import connect_db, get_collection
+from employee import Employee, EmployeeRepository
+
+
+# MongoDB 데이터베이스 연결
+db = connect_db()
+collection = get_collection('Scoring')  # 원하는 컬렉션 이름을 지정
+
 
 # GPU 사용 가능 확인 및 device 설정
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
