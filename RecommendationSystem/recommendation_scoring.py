@@ -11,9 +11,9 @@ tokenizer_roberta = AutoTokenizer.from_pretrained("klue/roberta-large")
 tokenizer_electra = AutoTokenizer.from_pretrained("monologg/koelectra-base-v3-discriminator")
 
 # 로드할 RoBERTa 모델 경로
-roberta_model_path = "/content/drive/MyDrive/to/save/roberta_model"
+roberta_model_path = "/content/drive/MyDrive/robust_model/roberta_model"
 # 로드할 Electra 모델 경로
-electra_model_path = "/content/drive/MyDrive/to/save/electra_model"
+electra_model_path = "/content/drive/MyDrive/robust_model/electra_model"
 
 # 저장된 모델 로드
 model_roberta = AutoModelForSequenceClassification.from_pretrained(roberta_model_path)
@@ -127,7 +127,9 @@ def get_coordinates_worksites(address):
           "김포시": {"work_location_x": 37.5613, "work_location_y": 126.8019},
   "남양주시": {"work_location_x": 37.6423, "work_location_y": 127.1264},
   "동두천시": {"work_location_x": 37.8922, "work_location_y": 127.0603},
-  "부천시": {"work_location_x": 37.5053, "work_location_y": 126.7535},
+  "부천시 소사구": {"subway_location_x": 37.4827, "subway_location_y": 126.7950},
+"부천시 원미구": {"subway_location_x": 37.5047, "subway_location_y": 126.7630},
+"부천시 오정구": {"subway_location_x": 37.5142, "subway_location_y": 126.7928},
   "성남시 수정구": {"work_location_x": 37.4519, "work_location_y": 127.1584},
   "성남시 분당구": {"work_location_x": 37.3595, "work_location_y": 127.1086},
   "성남시 중원구": {"work_location_x": 37.4321, "work_location_y": 127.1150},
@@ -137,6 +139,8 @@ def get_coordinates_worksites(address):
   "수원시 영통구": {"work_location_x": 37.2886, "work_location_y": 127.0511},
   "시흥시": {"work_location_x": 37.3800, "work_location_y": 126.8035},
   "안산시 단원구": {"work_location_x": 37.3180, "work_location_y": 126.8386},
+        "안산시 상록구": {"work_location_x": 37.3083, "work_location_y": 126.8530},
+
   "안성시": {"work_location_x": 37.0100, "work_location_y": 127.2701},
   "안양시 만안구": {"work_location_x": 37.4352, "work_location_y": 126.9021},
   "안양시 동안구": {"work_location_x": 37.0100, "work_location_y": 127.2701},
@@ -223,7 +227,10 @@ def get_coordinates_employee(address):
   "김포시": {"subway_location_x": 37.5613, "subway_location_y": 126.8019},
   "남양주시": {"subway_location_x": 37.6423, "subway_location_y": 127.1264},
   "동두천시": {"subway_location_x": 37.8922, "subway_location_y": 127.0603},
-  "부천시": {"subway_location_x": 37.5053, "subway_location_y": 126.7535},
+  "부천시 소사구": {"subway_location_x": 37.4827, "subway_location_y": 126.7950},
+"부천시 원미구": {"subway_location_x": 37.5047, "subway_location_y": 126.7630},
+"부천시 오정구": {"subway_location_x": 37.5142, "subway_location_y": 126.7928},
+
   "성남시 수정구": {"subway_location_x": 37.4519, "subway_location_y": 127.1584},
   "성남시 분당구": {"subway_location_x": 37.3595, "subway_location_y": 127.1086},
   "성남시 중원구": {"subway_location_x": 37.4321, "subway_location_y": 127.1150},
@@ -233,6 +240,8 @@ def get_coordinates_employee(address):
   "수원시 영통구": {"subway_location_x": 37.2886, "subway_location_y": 127.0511},
   "시흥시": {"subway_location_x": 37.3800, "subway_location_y": 126.8035},
   "안산시 단원구": {"subway_location_x": 37.3180, "subway_location_y": 126.8386},
+        "안산시 상록구": {"subway_location_x": 37.3083, "subway_location_y": 126.8530},
+
   "안성시": {"subway_location_x": 37.0100, "subway_location_y": 127.2701},
   "안양시 만안구": {"subway_location_x": 37.4352, "subway_location_y": 126.9021},
   "안양시 동안구": {"subway_location_x": 37.0100, "subway_location_y": 127.2701},
@@ -323,7 +332,7 @@ def calculate_score_for_person(person_info, model_roberta, model_electra, tokeni
 
     print(distance_score)
     # 텍스트 예측을 위한 코드 추가
-    texts_to_predict = [person_info['texts_to_predict']]  # 텍스트를 리스트로 변환
+    texts_to_predict = [person_info['review']]  # 텍스트를 리스트로 변환
     final_labels = predict_with_ensemble_modified(texts_to_predict, model_roberta, model_electra, tokenizer_roberta, tokenizer_electra, device)
     print(final_labels)
     for label in final_labels:
@@ -342,8 +351,8 @@ def calculate_score_for_person(person_info, model_roberta, model_electra, tokeni
 
 # 예시 데이터베이스에서 각 사람들에 대한 정보 수정
 people_info = [
-    {'employee_local': "성북구", 'worksites_local': "성북구", 'sex': '남자', 'actual_work_days': 20, 'applied_work_days': 20, 'work_frequency': 20, 'texts_to_predict': "앞으로 일을 맡겨도 좋을 사람임."},
-    {'employee_local': '고양시 일산서구', 'worksites_local': '성북구', 'sex': '여자', 'actual_work_days': 10, 'applied_work_days': 10, 'work_frequency': 25, 'texts_to_predict': "불성실하고 매우 필요없음 그냥 출근하지 않는게 나음"}
+    {'employee_local': "성북구", 'worksites_local': "성북구", 'sex': '남자', 'actual_work_days': 20, 'applied_work_days': 20, 'work_frequency': 20, 'review': "앞으로 일을 맡겨도 좋을 사람임."},
+    {'employee_local': '고양시 일산서구', 'worksites_local': '성북구', 'sex': '여자', 'actual_work_days': 10, 'applied_work_days': 10, 'work_frequency': 25, 'review': "불성실하고 매우 필요없음 그냥 출근하지 않는게 나음"}
 ]
 
 # 각 사람들의 점수 계산
