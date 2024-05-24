@@ -112,8 +112,9 @@
 
 ### 모델 배포포
 1. 모델은 huggingface에 업로드 되어있습니다 . [모델 주소 : https://huggingface.co/mmoonssun/klue_ner_kobert]
-2. [roberta_model: https://huggingface.co/Chamsol/klue-roberta-sentiment-classification/tree/main] [https://huggingface.co/Chamsol/klue-roberta-sentiment-classification]
-3. 파이썬이나 colab등에서 모델을 불러오려면 다음 코드를 실행하면 됩니다.
+2. [klue-roberta_model: https://huggingface.co/Chamsol/klue-roberta-sentiment-classification/tree/main]
+3. [koelectra_model: https://huggingface.co/Chamsol/klue-roberta-sentiment-classification]
+4. 파이썬이나 colab등에서 모델을 불러오려면 다음 코드를 실행하면 됩니다.
 ```python
 from kobert_transformers import get_kobert_model, get_tokenizer
 from transformers import BertForTokenClassification
