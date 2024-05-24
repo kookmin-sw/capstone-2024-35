@@ -130,9 +130,7 @@ npm install
 
 
 
-## env 파일 예시
-파일 명 .env <br>
-MONGO_URI=our mongodb uri (given) <br> JWT_SECRET=our own text
+
 
 
 ## 7. 캡스톤 최종발료 자료 
