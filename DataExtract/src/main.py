@@ -5,7 +5,9 @@ from data_processing import find_career_status, find_phone_number, extract_and_c
 from datasets import load_dataset
 from config.db import connect_db, get_collection
 from employee import Employee, EmployeeRepository
+from flask import Flask, request, render_template, redirect, url_for
 
+app = Flask(__name__)
 
 # MongoDB 데이터베이스 연결
 db = connect_db()
@@ -23,6 +25,16 @@ model, tokenizer = load_model_and_tokenizer()
 
 # 예시 텍스트
 #text = "송문선 / 24/서초구 거주/경력은 사무실 철거 해봤습니다."
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        text = request.form['text']
+        if text:
+            combine(text)
+            return redirect(url_for('index'))
+    return render_template('index.html')
+
 
 
 def combine(text):
@@ -52,8 +64,16 @@ def combine(text):
     employee_repo = EmployeeRepository()
     employee_repo.insert(new_employee)
     print(entities_combined)
-    
 
+@app.route('/employees', methods=['GET'])
+def list_employees():
+    employee_repo = EmployeeRepository()
+    employees = employee_repo.find_all()
+    return render_template('employees.html', employees=employees)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+'''
 while(1):
     text = input('메시지 내용 : ')
     if text == 'quit':
@@ -64,4 +84,4 @@ employee_repo = EmployeeRepository()
 for employee in employee_repo.find_all():
         print(employee)
 
-
+'''
