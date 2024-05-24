@@ -110,7 +110,7 @@
 ### 로컬 MongoDB 설치
 1. MongoDB 공식 사이트에서 MongoDB Community Server를 다운로드하고 설치합니다. [MongoDB 다운로드 페이지](https://www.mongodb.com/try/download/community)
 
-### 모델 배포포
+### 모델 배포
 1. 모델은 huggingface에 업로드 되어있습니다 . [모델 주소 : https://huggingface.co/mmoonssun/klue_ner_kobert]
 2. [klue-roberta_model: https://huggingface.co/Chamsol/klue-roberta-sentiment-classification/tree/main]
 3. [koelectra_model: https://huggingface.co/Chamsol/klue-roberta-sentiment-classification]
