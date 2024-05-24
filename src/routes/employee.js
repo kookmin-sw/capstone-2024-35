@@ -8,6 +8,7 @@ router.get('/employee', isLoggedIn, employeeController.employee);
 router.get('/addemployee', isLoggedIn, employeeController.addEmployee);
 router.post('/addemployee', isLoggedIn, employeeController.postEmployee);
 router.get('/view/:id', isLoggedIn, employeeController.viewEmployee);
+router.put('/view/:eid/putreview/:cid', isLoggedIn, employeeController.putReview)
 
 router.get('/edit/:id', isLoggedIn, employeeController.editEmployee);
 router.put('/edit/:id', isLoggedIn, employeeController.editPostemployee);

@@ -74,12 +74,12 @@
                     <th scope="col" class="sortable" onclick="sortTable('hour', 'number')">근무시간</th>
                     <th scope="col" class="sortable" onclick="sortTable('norp', 'number')">필요인원</th>
                     <!-- <th scope="col" class="sortable" onclick="sortTable('update', 'date')">작성일(수정일)</th> -->
-                    <th scope="col" class="text-end">Action</th>
+                    <!-- <th scope="col" class="text-end">Action</th> -->
                 </tr>
             </thead>
             <tbody>
                 <% worksites.forEach(worksite => { %>
-                <tr class="align-middle" onclick="location.href='/worksite/<%= worksite._id %>'">
+                <tr class="align-middle" style="height: 60px;" onclick="location.href='/worksite/<%= worksite._id %>'">
                     <td><%= worksite.name %></td>
                     <td><%= worksite.address %></td>
                     <td><%= worksite.local %></td>
@@ -89,7 +89,7 @@
                     <td><%= moment(worksite.end).diff(worksite.date, 'hour') %>시간</td>
                     <td><%= worksite.hired.length %> / <%= worksite.nopr %></td>
                     <!-- <td><%= moment(worksite.updatedAt).format("YYYY년 MMMM Do a hh:mm") %></td> -->
-                    <td class="text-end">
+                    <!-- <td class="text-end">
 
                         <div class="d-flex flex-row justify-content-end gap-2">
                             <a href="/worksite/<%= worksite._id %>" type="button" class="btn btn-primary btn-small">
@@ -99,7 +99,7 @@
                                 <i class="bi bi-pencil"></i>
                             </a>
                         </div>
-                    </td>
+                    </td> -->
                 </tr>
                 <% }) %>
             </tbody>

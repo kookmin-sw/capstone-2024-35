@@ -1,0 +1,21 @@
+torch
+transformers[torch]
+datasets
+seqeval
+kobert-transformers
+onnxruntime==1.8.0
+git+https://github.com/SKTBrain/KoBERT.git@master
+git+https://github.com/SKTBrain/KoBERT.git#egg=kobert_tokenizer&subdirectory=kobert_hf
+import numpy as np
+import pandas as pd
+import torch
+from torch.utils.data import Dataset, DataLoader
+from transformers import (
+    AutoTokenizer,
+    AutoModelForSequenceClassification,
+    Trainer,
+    TrainingArguments,
+    EvalPrediction
+)
+from sklearn.metrics import accuracy_score
+from transformers import TrainerCallback

@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { isLoggedIn } = require('../middleware/checkAuth');
 const worksiteController = require('../controllers/worksiteController');
+const smsController = require('../controllers/smsController')
 
+router.get('/python', smsController.parseMessage);
+router.get('/sms', smsController.getsms);
+router.post('/sms', smsController.parseMessage);
 router.get('/worksite', isLoggedIn, worksiteController.worksite);
 router.get('/worksite/add', isLoggedIn, worksiteController.addWorksite);
 router.post('/worksite/post', isLoggedIn, worksiteController.postWorksite);
