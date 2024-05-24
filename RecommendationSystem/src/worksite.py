@@ -47,4 +47,4 @@ class Worksite:
             'updateAt': self.updateAt
         }
 
-# hired는 지원후 수락인원, local,
+# local 나머지는 디비 쿼리수를 계산하여 연산

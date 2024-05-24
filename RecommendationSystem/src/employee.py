@@ -30,4 +30,4 @@ class Employee:
             'updatedAt': self.updated_at
         }
 
-# sex, user, local
+# sex, employee id, local
