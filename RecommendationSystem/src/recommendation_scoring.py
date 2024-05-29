@@ -36,28 +36,28 @@ app = Flask(__name__)
 db = connect_db()
 collection = get_collection('career')  # 원하는 컬렉션 이름을 지정
 
-career_collection = db['career']
-employee_collection = db['employee']
-worksite_collection = db['worksites']
-
+career_collection = get_collection('career')
+employee_collection = get_collection('employee')
+worksite_collection = get_collection('worksites')
 # 결과를 저장할 리스트
 people_info = []
 
 # career 컬렉션에서 데이터 가져오기
 career_docs = career_collection.find()
 for career in career_docs:
+    _id=career['_id']
     employee_id = career['employee']
     review = career['review']
 
     # employee 컬렉션에서 employee_id에 해당하는 데이터 가져오기
-    employee = employee_collection.find_one({'_id': employee_id})
+    employee = employee_collection.find_one({'_id': _id})
     if employee:
         sex = employee['sex']
         employee_local = employee['local']
 
         # worksite 컬렉션에서 worksite_id에 해당하는 데이터 가져오기
         worksite_id = career['worksite']
-        worksite = worksite_collection.find_one({'_id': worksite_id})
+        worksite = worksite_collection.find_one({'_id': _id})
         if worksite:
             worksites_local = worksite['local']
 

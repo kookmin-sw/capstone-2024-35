@@ -5,7 +5,8 @@ from bson import ObjectId
 from config.db import get_collection
 
 class Career:
-    def __init__(self, employee, worksite, done, pay, review, score):
+    def __init__(self, _id,employee, worksite, done, pay, review, score):
+        self._id = ObjectId(_id)
         self.employee = ObjectId(employee)
         self.worksite = ObjectId(worksite)
         self.done = done

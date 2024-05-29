@@ -5,7 +5,8 @@ from bson import ObjectId
 from config.db import get_collection
 
 class Worksites:
-    def __init__(self, user, name, address, local, salary, worktype, date, end, nopr, wanted, sent, sendmessage, recieved, denied, hired, worksitenote, createdAt, updateAt):
+    def __init__(self, _id,user, name, address, local, salary, worktype, date, end, nopr, wanted, sent, sendmessage, recieved, denied, hired, worksitenote, createdAt, updateAt):
+        self._id = ObjectId(_id)
         self.user = ObjectId(user)
         self.name = name
         self.address = address
