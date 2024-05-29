@@ -1,21 +1,12 @@
+geopy
 torch
-transformers[torch]
-datasets
-seqeval
-kobert-transformers
-onnxruntime==1.8.0
-git+https://github.com/SKTBrain/KoBERT.git@master
-git+https://github.com/SKTBrain/KoBERT.git#egg=kobert_tokenizer&subdirectory=kobert_hf
-import numpy as np
-import pandas as pd
-import torch
-from torch.utils.data import Dataset, DataLoader
-from transformers import (
-    AutoTokenizer,
-    AutoModelForSequenceClassification,
-    Trainer,
-    TrainingArguments,
-    EvalPrediction
-)
-from sklearn.metrics import accuracy_score
-from transformers import TrainerCallback
+transformers
+numpy
+pandas
+
+# 토크나이저 로딩
+#tokenizer_roberta = AutoTokenizer.from_pretrained("klue/roberta-large")
+#tokenizer_electra = AutoTokenizer.from_pretrained("monologg/koelectra-base-v3-discriminator")
+# 저장된 모델 로드
+#model_roberta = AutoModelForSequenceClassification.from_pretrained("Chamsol/klue-roberta-sentiment-classification")
+#model_electra = AutoModelForSequenceClassification.from_pretrained("Chamsol/koelctra-sentiment-classification")

@@ -1,3 +1,4 @@
+from geopy.distance import geodesic
 def label_to_value(label):
     if label == 0:
         return -30

@@ -5,12 +5,15 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import numpy as np
 import pandas as pd
 
-
+from datasets import load_dataset
+from datetime import datetime
+from bson import ObjectId
 from config.db import connect_db, get_collection
 from employee import Employee
 from career import Career
-from worksite import Worksite
+from worksites import Worksites
 from pymongo import MongoClient
+
 from distance import label_to_value, calculate_distance, get_coordinates_employee,get_coordinates_worksites
 from texteval import logits_to_probs, predict_with_ensemble_modified
 from flask import Flask, request, render_template, redirect, url_for
@@ -31,10 +34,50 @@ app = Flask(__name__)
 
 # MongoDB 데이터베이스 연결
 db = connect_db()
-collection = get_collection('Scoring')  # 원하는 컬렉션 이름을 지정
+collection = get_collection('career')  # 원하는 컬렉션 이름을 지정
 
+career_collection = db['career']
+employee_collection = db['employee']
+worksite_collection = db['worksites']
 
+# 결과를 저장할 리스트
+people_info = []
 
+# career 컬렉션에서 데이터 가져오기
+career_docs = career_collection.find()
+for career in career_docs:
+    employee_id = career['employee']
+    review = career['review']
+
+    # employee 컬렉션에서 employee_id에 해당하는 데이터 가져오기
+    employee = employee_collection.find_one({'_id': employee_id})
+    if employee:
+        sex = employee['sex']
+        employee_local = employee['local']
+
+        # worksite 컬렉션에서 worksite_id에 해당하는 데이터 가져오기
+        worksite_id = career['worksite']
+        worksite = worksite_collection.find_one({'_id': worksite_id})
+        if worksite:
+            worksites_local = worksite['local']
+
+            # 필요한 데이터를 딕셔너리에 저장
+            person_info = {
+                'employee_id': str(employee_id),
+                'employee_local': employee_local,
+                'worksites_local': worksites_local,
+                'sex': sex,
+                'review': review
+            }
+
+            # 딕셔너리를 리스트에 추가
+            people_info.append(person_info)
+
+# 결과 출력
+for info in people_info:
+    print(info)
+
+'''
 # 쿼리로 actual, applied 계산하기
 
 # db_to_dict employee id당 dict으로 만들어서 people_info dict에 저장
@@ -141,6 +184,8 @@ for doc in employee_docs:
     if isinstance(person_dict, dict):  # 유효한 딕셔너리인지 확인
         people_info.append(person_dict)
 
+'''
+
 #score
 
 
@@ -199,10 +244,12 @@ def calculate_score_for_person(person_info, model_roberta, model_electra, tokeni
     else:
         distance_score = 0
 
-
-    # 텍스트 예측을 위한 코드 추가
-    texts_to_predict = [person_info['review']]  # 텍스트를 리스트로 변환
-    final_labels = predict_with_ensemble_modified(texts_to_predict, model_roberta, model_electra, tokenizer_roberta, tokenizer_electra, device)
+    if person_info['review'] == "":
+        final_labels = [10]
+    else:
+        texts_to_predict = [person_info['review']]  # 텍스트를 리스트로 변환
+        final_labels = predict_with_ensemble_modified(texts_to_predict, model_roberta, model_electra, tokenizer_roberta,
+                                                      tokenizer_electra, device)
 
     for label in final_labels:
       sentiment_score = label_to_value(label)
@@ -211,14 +258,17 @@ def calculate_score_for_person(person_info, model_roberta, model_electra, tokeni
 
 
     # 각 변수에 가중치를 곱하여 합산된 점수를 계산
-    total_score = (distance_score * weight_distance) + \
-                  (attendance_score * weight_attendance) + \
-                  (work_frequency_score * weight_work_frequency) + \
-                  (sentiment_score * weight_label_value)
+    total_score = (distance_score * weight_distance) + (sentiment_score * weight_label_value)
+                  #(attendance_score * weight_attendance) + \
+                  #(work_frequency_score * weight_work_frequency) + \
+                  #(sentiment_score * weight_label_value)
 
-    return total_score*gender_weight
+    score=total_score*gender_weight
 
 
+    return score
+
+'''
 # 각 사람들의 점수 계산 및 MongoDB에 저장
 people_info = [
     {'employee_id': 'id1234', 'employee_local': "성북구", 'worksites_local': "성북구", 'sex': '남자', 'actual_work_days': 20,
@@ -226,17 +276,17 @@ people_info = [
     {'employee_id': 'id1235', 'employee_local': '고양시 일산서구', 'worksites_local': '성북구', 'sex': '여자',
      'actual_work_days': 10, 'applied_work_days': 10, 'review': "불성실하고 매우 필요없음 그냥 출근하지 않는게 나음"}
 ]
-
+'''
 for person_info in people_info:
     score = calculate_score_for_person(person_info, model_roberta, model_electra, tokenizer_roberta, tokenizer_electra,device)  # 점수 계산 함수 호출
     employee_id = person_info['employee_id']
+    # MongoDB의 career 컬렉션에 score를 추가
 
-    # MongoDB에 저장
-    update_result = career_collection.update_one(
-        {'employee_id': employee_id},  # 찾을 조건
-        {'$set': {'score': score}},  # 업데이트할 내용
-        upsert=True  # 해당하는 문서가 없으면 새로 생성
+    career_collection.update_many(
+        {'employee': ObjectId(employee_id)},  # employee_id에 해당하는 문서
+        {'$set': {'score': score}}  # score 필드를 추가하거나 업데이트
     )
+updated_career_docs = career_collection.find()
+for doc in updated_career_docs:
+    print(doc)
 
-# 클라이언트 종료
-client.close()

@@ -327,8 +327,12 @@ def calculate_score_for_person(person_info, model_roberta, model_electra, tokeni
         distance_score = 0
 
     # 텍스트 예측을 위한 코드 추가
-    texts_to_predict = [person_info['review']]  # 텍스트를 리스트로 변환
-    final_labels = predict_with_ensemble_modified(texts_to_predict, model_roberta, model_electra, tokenizer_roberta, tokenizer_electra, device)
+    if person_info['review'] == "":
+        final_labels = [10]
+    else:
+        texts_to_predict = [person_info['review']]  # 텍스트를 리스트로 변환
+        final_labels = predict_with_ensemble_modified(texts_to_predict, model_roberta, model_electra, tokenizer_roberta,
+                                                      tokenizer_electra, device)
 
     for label in final_labels:
       sentiment_score = label_to_value(label)
@@ -351,7 +355,7 @@ people_info = [
     {'employee_local': "성북구", 'worksites_local': "성북구", 'sex': '남자', 'actual_work_days': 20, 'applied_work_days': 20, 'work_frequency': 20, 'review': "일은 보통으로 하고 사람은 좋음"},
     {'employee_local': '고양시 일산서구', 'worksites_local': '성북구', 'sex': '여자', 'actual_work_days': 10, 'applied_work_days': 10, 'work_frequency': 25, 'review': "일도 매우 잘하고 사람도 좋고 성실함"}, #업무 능숙도에 대한 corpus에 민감함
     {'employee_local': '고양시 일산서구', 'worksites_local': '성북구', 'sex': '여자', 'actual_work_days': 10, 'applied_work_days': 10, 'work_frequency': 25, 'review': "일은 잘못하고 불만은 없는 것 같음."},
-    {'employee_local': '안산시 상록구', 'worksites_local': '동두천시', 'sex': '남자', 'actual_work_days': 10, 'applied_work_days': 10, 'work_frequency': 25, 'review': "불성실하고 매우 필요없음 그냥 없는게 나음"},
+    {'employee_local': '동두천시', 'worksites_local': '동두천시', 'sex': '남자', 'actual_work_days': 10, 'applied_work_days': 10, 'work_frequency': 25, 'review': ""},
 
         {
         'employee_local': "성북구",
