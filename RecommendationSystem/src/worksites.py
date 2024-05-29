@@ -4,7 +4,7 @@ from datetime import datetime
 from bson import ObjectId
 from config.db import get_collection
 
-class Worksite:
+class Worksites:
     def __init__(self, user, name, address, local, salary, worktype, date, end, nopr, wanted, sent, sendmessage, recieved, denied, hired, worksitenote, createdAt, updateAt):
         self.user = ObjectId(user)
         self.name = name
