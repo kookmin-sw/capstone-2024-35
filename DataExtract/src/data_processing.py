@@ -1,7 +1,7 @@
 import re
 
 def find_career_status(text):
-    pattern = r'(경력\s*(:|은|는|이|가| )?\s*[^,\.]*)'
+    pattern = r'(경력\s*(:|은|는|이|가| )?\s*[^,\.]*|없|있|무|유)'
     match = re.search(pattern, text)
     if match:
         full_text = match.group(1).strip()
@@ -25,9 +25,14 @@ def extract_and_combine_entities(predicted_entities):
     entity_info = {"name": "", "local": "", "age": ""}
     for token, tag in predicted_entities:
         if tag == 'B-PS':
-            entity_info["name"] += token.strip()
+            entity_info["name"] += token.strip() + " "  # 이름 분리
         elif tag == 'B-LC':
             entity_info["local"] += token.strip() if token != " " else token
         elif tag in ['B-QT', 'B-DT']:
-            entity_info["age"] = token.strip()
+            entity_info["age"] += token.strip() + " "
+    entity_info["name"] = entity_info["name"].strip()  # 공백 제거
+    #entity_info["local"] = entity_info["local"].strip()
+    entity_info["age"] = entity_info["age"].strip()
+
+
     return entity_info

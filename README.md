@@ -110,9 +110,11 @@
 ### 로컬 MongoDB 설치
 1. MongoDB 공식 사이트에서 MongoDB Community Server를 다운로드하고 설치합니다. [MongoDB 다운로드 페이지](https://www.mongodb.com/try/download/community)
 
-### 모델 불러오기
+### 모델 배포
 1. 모델은 huggingface에 업로드 되어있습니다 . [모델 주소 : https://huggingface.co/mmoonssun/klue_ner_kobert]
-2. 파이썬이나 colab등에서 모델을 불러오려면 다음 코드를 실행하면 됩니다.
+2. [klue-roberta_model: https://huggingface.co/Chamsol/klue-roberta-sentiment-classification/tree/main]
+3. [koelectra_model: https://huggingface.co/Chamsol/klue-roberta-sentiment-classification]
+4. 파이썬이나 colab등에서 모델을 불러오려면 다음 코드를 실행하면 됩니다.
 ```python
 from kobert_transformers import get_kobert_model, get_tokenizer
 from transformers import BertForTokenClassification
@@ -128,12 +130,9 @@ npm install
 
 ## 추후 변경해야 할 점
 
-2024-04-04 추가 패키지 dotenv cors mongoose jsonwebtoken express-async-errors
 
 
-## env 파일 예시
-파일 명 .env <br>
-MONGO_URI=our mongodb uri (given) <br> JWT_SECRET=our own text
+
 
 
 ## 7. 캡스톤 최종발료 자료 
