@@ -12,6 +12,7 @@ ca = certifi.where()
 def connect_db():
     client = MongoClient(mongodb_uri, tlsCAFile=ca)
     db = client['Authusers']  # 데이터베이스 이름을 여기에서 변경 가능
+    print("Connected to MongoDB. Collections available:", db.list_collection_names())
     return db
 def get_collection(collection_name):
     db = connect_db()

@@ -32,159 +32,51 @@ model_electra = AutoModelForSequenceClassification.from_pretrained("Chamsol/koel
 
 app = Flask(__name__)
 
-# MongoDB 데이터베이스 연결
 db = connect_db()
-collection = get_collection('career')  # 원하는 컬렉션 이름을 지정
 
-career_collection = get_collection('career')
-employee_collection = get_collection('employee')
+career_collection = get_collection('careers')
+employee_collection = get_collection('employees')
 worksite_collection = get_collection('worksites')
-# 결과를 저장할 리스트
+
+# career 컬렉션에서 모든 문서 읽기
+careers1 = career_collection.find()
+
 people_info = []
 
-# career 컬렉션에서 데이터 가져오기
-career_docs = career_collection.find()
-for career in career_docs:
-    _id=career['_id']
-    employee_id = career['employee']
-    review = career['review']
+for careers in careers1:
+    career_id = str(careers['_id'])
+    employee_id = careers['employee']
+    worksite_id = careers['worksite']
 
-    # employee 컬렉션에서 employee_id에 해당하는 데이터 가져오기
-    employee = employee_collection.find_one({'_id': _id})
-    if employee:
-        sex = employee['sex']
-        employee_local = employee['local']
+    employee = employee_collection.find_one({'_id': ObjectId(employee_id)})
+    if employee is None:
+        print(f"Employee with ID {employee_id} not found. Skipping this entry.")
+        continue
+    sex = employee['sex']
+    employee_local = employee['local']
 
-        # worksite 컬렉션에서 worksite_id에 해당하는 데이터 가져오기
-        worksite_id = career['worksite']
-        worksite = worksite_collection.find_one({'_id': _id})
-        if worksite:
-            worksites_local = worksite['local']
+    worksite = worksite_collection.find_one({'_id': ObjectId(worksite_id)})
+    if worksite is None:
+        print(f"Worksite with ID {worksite_id} not found. Skipping this entry.")
+        continue
+    worksite_local = worksite['local']
 
-            # 필요한 데이터를 딕셔너리에 저장
-            person_info = {
-                'employee_id': str(employee_id),
-                'employee_local': employee_local,
-                'worksites_local': worksites_local,
-                'sex': sex,
-                'review': review
-            }
+    applied_work_days = career_collection.count_documents({'employee': employee_id})
+    actual_work_days = career_collection.count_documents({'employee': employee_id, 'done': True})
 
-            # 딕셔너리를 리스트에 추가
-            people_info.append(person_info)
+    review = careers.get('review', "")
 
-# 결과 출력
-for info in people_info:
-    print(info)
-
-'''
-# 쿼리로 actual, applied 계산하기
-
-# db_to_dict employee id당 dict으로 만들어서 people_info dict에 저장
-career_collection = db['career']  # 컬렉션 이름으로 변경
-employees_collection = db['employees']
-worksite_collection = db['worksite']
-
-query = {}  # 필요하다면 특정 조건을 여기에 추가
-projection = {'sex': 1, 'user': 1, 'local': 1}
-employee_docs = employees_collection.find(query, projection)
-
-# 조회된 데이터를 기반으로 새로운 딕셔너리 생성
-employees_info = []
-for doc in employee_docs:
-    employee_info = {
-        'employee_id': str(doc['user']),  # ObjectId를 문자열로 변환
-        'sex': doc['sex'],
-        'employee_local': doc['local']
-    }
-    employees_info.append(employee_info)
-
-worksites = worksite_collection.find({}, {'local': 1})
-
-worksites_info = []
-for worksite in worksites:
-    worksite_info = {
-        'worksite_local': worksite.get('local')
-    }
-    worksites_info.append(worksite_info)
-
-def get_reviews():
-    # 커리어 컬렉션의 모든 문서를 검색
-    careers = career_collection.find()
-
-    # reviews 딕셔너리 생성
-    reviews = {}
-
-    # 각 문서에서 review 필드를 추출하여 딕셔너리에 저장
-    for career in careers:
-        employee_id = str(career['employee'])
-        reviews[employee_id] = career['review']
-
-    return reviews
-
-
-# 리뷰 데이터를 가져와서 딕셔너리로 저장
-reviews_dict = get_reviews()
-
-def count_work_days(employee_id):
-    # employee_id에 해당하는 모든 Career 문서의 수를 카운팅하여 applied_work_days로 저장
-    applied_work_days = career_collection.count_documents({'employee': ObjectId(employee_id)})
-
-    # employee_id에 해당하면서 done: true인 문서의 수를 카운팅하여 actual_work_days로 저장
-    actual_work_days = career_collection.count_documents({'employee': ObjectId(employee_id), 'done': True})
-
-    # 결과를 딕셔너리 형태로 저장
-    result = {
+    result_dict = {
+        'career_id': career_id,
+        'employee_local': employee_local,
+        'worksites_local': worksite_local,
+        'sex': sex,
+        'actual_work_days': actual_work_days,
         'applied_work_days': applied_work_days,
-        'actual_work_days': actual_work_days
-    }
-
-    return result
-
-
-def db_to_dict(employee_id):
-    # employee_id에 해당하는 직원 정보 검색
-    employee_doc = employees_collection.find_one({'user': ObjectId(employee_id)}, {'sex': 1, 'local': 1})
-    if not employee_doc:
-        pass
-
-    # 해당 직원의 근무 일수와 리뷰 정보 계산
-    work_days_info = count_work_days(employee_id)
-    review = reviews_dict.get(employee_id)
-
-    # 직원이 근무하는 사이트 정보 검색
-    career_doc = career_collection.find_one({'employee': ObjectId(employee_id)}, {'worksite': 1})
-    if not career_doc:
-        return 0
-    worksite_doc = worksite_collection.find_one({'_id': career_doc['worksite']}, {'local': 1})
-
-    # 최종 딕셔너리 생성
-    people_dict = {
-        'employee_id': employee_id,
-        'employee_local': employee_doc['local'],
-        'worksites_local': worksite_doc['local'],
-        'sex': employee_doc['sex'],
-        'actual_work_days': work_days_info['actual_work_days'],
-        'applied_work_days': work_days_info['applied_work_days'],
         'review': review
     }
 
-    return people_dict
-
-# people_info 리스트 초기화
-people_info = []
-
-# 모든 직원 문서 검색
-employee_docs = employees_collection.find({}, {'user': 1})
-
-# 각 직원에 대해 db_to_dict 함수를 호출하여 people_info에 추가
-for doc in employee_docs:
-    employee_id = str(doc['user'])  # ObjectId를 문자열로 변환
-    person_dict = db_to_dict(employee_id)
-    if isinstance(person_dict, dict):  # 유효한 딕셔너리인지 확인
-        people_info.append(person_dict)
-
-'''
+    people_info.append(result_dict)
 
 #score
 
@@ -258,35 +150,27 @@ def calculate_score_for_person(person_info, model_roberta, model_electra, tokeni
 
 
     # 각 변수에 가중치를 곱하여 합산된 점수를 계산
-    total_score = (distance_score * weight_distance) + (sentiment_score * weight_label_value)
-                  #(attendance_score * weight_attendance) + \
-                  #(work_frequency_score * weight_work_frequency) + \
-                  #(sentiment_score * weight_label_value)
-
-    score=total_score*gender_weight
+    total_score = (distance_score * weight_distance) + \
+                  (attendance_score * weight_attendance) + \
+                  (work_frequency_score * weight_work_frequency) + \
+                  (sentiment_score * weight_label_value)
 
 
-    return score
 
-'''
-# 각 사람들의 점수 계산 및 MongoDB에 저장
-people_info = [
-    {'employee_id': 'id1234', 'employee_local': "성북구", 'worksites_local': "성북구", 'sex': '남자', 'actual_work_days': 20,
-     'applied_work_days': 20, 'review': "앞으로 일을 맡겨도 좋을 사람임."},
-    {'employee_id': 'id1235', 'employee_local': '고양시 일산서구', 'worksites_local': '성북구', 'sex': '여자',
-     'actual_work_days': 10, 'applied_work_days': 10, 'review': "불성실하고 매우 필요없음 그냥 출근하지 않는게 나음"}
-]
-'''
+    return total_score*gender_weight
+
+
 for person_info in people_info:
-    score = calculate_score_for_person(person_info, model_roberta, model_electra, tokenizer_roberta, tokenizer_electra,device)  # 점수 계산 함수 호출
-    employee_id = person_info['employee_id']
-    # MongoDB의 career 컬렉션에 score를 추가
+    score = calculate_score_for_person(person_info, model_roberta, model_electra, tokenizer_roberta, tokenizer_electra, device)
+    career_id = person_info['career_id']
 
-    career_collection.update_many(
-        {'employee': ObjectId(employee_id)},  # employee_id에 해당하는 문서
-        {'$set': {'score': score}}  # score 필드를 추가하거나 업데이트
-    )
+    career_collection.update_one(
+            {'_id': ObjectId(career_id)},
+            {'$set': {'score': score}}
+        )
+
 updated_career_docs = career_collection.find()
 for doc in updated_career_docs:
-    print(doc)
-
+        print(doc)
+else:
+    print("Skipping data processing and score calculation due to DB connection issues.")
