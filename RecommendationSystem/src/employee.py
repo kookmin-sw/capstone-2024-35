@@ -5,7 +5,8 @@ from bson import ObjectId
 from config.db import get_collection
 
 class Employee:
-    def __init__(self, user, name, sex, local, rrn,career,age, created_at=None, updated_at=None):
+    def __init__(self, _id,user, name, sex, local, rrn,career,age, created_at=None, updated_at=None):
+        self._id=ObjectId(_id)
         self.user = ObjectId(user)
         self.name = name
         self.sex = sex
