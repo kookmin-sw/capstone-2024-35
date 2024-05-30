@@ -89,7 +89,7 @@ def calculate_score_for_person(person_info, model_roberta, model_electra, tokeni
     weight_work_frequency = 0.2
     weight_label_value = 0.3
     # 성별에 따라 가중치 조정
-    gender_weight = 1 if person_info['sex'] == '남자' or person_info['sex'] == '여자' else 0
+    gender_weight = 1 if person_info['sex'] == '남자' or person_info['sex'] == '여자' else 1
 
     work_location = get_coordinates_worksites(person_info['worksites_local'])  # 주소가 없으면 None 반환)
     subway_station = get_coordinates_employee(person_info['employee_local'])
