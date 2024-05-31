@@ -35,7 +35,7 @@ class EmployeeRepository:
     Employee 데이터를 관리하는 저장소 클래스.
     """
     def __init__(self):
-        self.collection = get_collection('ExtractedEntities')
+        self.collection = get_collection('employees')
 
     def insert(self, employee: Employee):
         """
