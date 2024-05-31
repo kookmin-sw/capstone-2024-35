@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 # MongoDB 데이터베이스 연결
 db = connect_db()
-collection = get_collection('ExtractedEntities')  # 원하는 컬렉션 이름을 지정
+collection = get_collection('employees')  # 원하는 컬렉션 이름을 지정
 
 
 # KLUE NER 데이터셋 로드
