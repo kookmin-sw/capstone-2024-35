@@ -94,6 +94,7 @@
 
 
 ## 5. 서비스 구조도
+![image](https://github.com/user-attachments/assets/47fea5f3-81a2-4a99-a75c-04f68ad8f42e)
 
 
 ## 6. 사용방법
