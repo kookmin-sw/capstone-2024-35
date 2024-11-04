@@ -40,7 +40,7 @@
         <td>Product Manager</td>
     </tr>
 </table>
-
+![1A7A9855 copy](https://github.com/user-attachments/assets/c33c1095-e58a-4bdd-9f14-00c7b77400fc)
 <table>
     <tr align="center">
         <td><img src="https://github.com/kookmin-sw/capstone-2021-18/assets/66250400/a792894c-771e-4cd6-98db-5b48bd8840cb"
